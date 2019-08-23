@@ -5,7 +5,7 @@
     "test": "ts-node test"
   },
   "devDependencies": {
-    "@types/node": "^12.7.1",
+    "@types/node": "^12.7.2",
     "fp-ts": "^2.0.5",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
@@ -16,9 +16,9 @@
   "dependencies": {
     "@types/bluebird": "^3.5.27",
     "bluebird": "^3.5.5",
-    "fluture": "^11.0.2",
+    "fluture": "^11.0.3",
     "fp-ts-fluture": "^0.5.0",
     "rxjs": "^6.5.2",
-    "ts-node-dev": "^1.0.0-pre.40"
+    "ts-node-dev": "^1.0.0-pre.41"
   }
 }

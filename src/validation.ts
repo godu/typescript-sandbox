@@ -17,13 +17,16 @@ function do_(fun: () => IterableIterator<any>): void {
     return next();
 }
 
-console.log('result', do_(function* () {
-    const user = yield fetchUser();
+const gen =  function* (): {
+    next<T>(value: T)
+} {
+    const user: string = yield fetchUser();
     console.log({user});
-    const result = yield fetchPosts(user);
+    const result: number = yield fetchPosts(user);
 
-    console.log({result});
-    const arr =  yield toArray(result);
+    const arr: any[] =  yield toArray(result);
 
     return yield fail();
-}))
+}
+
+console.log('result', do_(gen))
