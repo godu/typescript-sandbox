@@ -14,6 +14,7 @@ export function left<E, A>(value: E): Either<E, A> {
 export function right<E, A>(value: A): Either<E, A> {
     return { _tag: 'Right', value };
 }
+export const of = right;
 
 export function map<E, A, B>(f: (a: A) => B, ma: Either<E, A>) {
     if (ma._tag === 'Left') return ma;

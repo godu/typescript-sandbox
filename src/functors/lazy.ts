@@ -1,6 +1,6 @@
 export type Lazy<A> = () => A;
 
-export function lazy<A>(value: A): Lazy<A> {
+export function of<A>(value: A): Lazy<A> {
     return () => value;
 }
 

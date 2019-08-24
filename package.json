@@ -19,6 +19,6 @@
     "fluture": "^11.0.3",
     "fp-ts-fluture": "^0.5.0",
     "rxjs": "^6.5.2",
-    "ts-node-dev": "^1.0.0-pre.41"
+    "ts-node-dev": "^1.0.0-pre.42"
   }
 }

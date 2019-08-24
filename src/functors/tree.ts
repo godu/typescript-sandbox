@@ -12,6 +12,7 @@ export function node<A>(
     return { _tag: 'Node', value, left, right };
 }
 
+export const of = node;
 export function map<A, B>(f: (a: A) => B, ma: Tree<A>): Tree<B> {
     if (ma._tag === 'Leaf') return leaf;
     else return node(

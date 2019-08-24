@@ -1,4 +1,6 @@
 import {deepEqual, ok} from 'assert';
+import * as Array from './array';
+import * as Promise_ from './promise';
 import * as Maybe from './maybe';
 import * as Either from './either';
 import * as Tree from './tree';
@@ -16,27 +18,43 @@ function isAdult( u: User ) {
 };
 
 deepEqual(
+    Array.map(
+        isAdult,
+        Array.of(user)
+    ),
+    Array.of(isAdult(user)),
+    'Promise is not a functor'
+);
+deepEqual(
+    await Promise_.map(
+        isAdult,
+        Promise_.of(user)
+    ),
+    await Promise_.of(isAdult(user)),
+    'Promise is not a functor'
+);
+deepEqual(
     Maybe.map(
         isAdult,
-        Maybe.just(user)
+        Maybe.of(user)
     ),
-    Maybe.just(isAdult(user)),
+    Maybe.of(isAdult(user)),
     'Maybe is not a functor'
 );
 deepEqual(
     Either.map(
         isAdult,
-        Either.right(user)
+        Either.of(user)
     ),
-    Either.right(isAdult(user)),
+    Either.of(isAdult(user)),
     'Either is not a functor'
 );
 deepEqual(
     Tree.map(
         isAdult,
-        Tree.node(user)
+        Tree.of(user)
     ),
-    Tree.node(isAdult(user)),
+    Tree.of(isAdult(user)),
     'Tree is not a functor'
 );
 deepEqual(
@@ -50,20 +68,20 @@ deepEqual(
 deepEqual(
     Identity.map(
         isAdult,
-        Identity.identity(user)
+        Identity.of(user)
     ),
-    Identity.identity(isAdult(user)),
+    Identity.of(isAdult(user)),
     'Identity is not a functor'
 );
 deepEqual(
     Lazy.force(
         Lazy.map(
             isAdult,
-            Lazy.lazy(user)
+            Lazy.of(user)
         )
     ),
     Lazy.force(
-        Lazy.lazy(isAdult(user))
+        Lazy.of(isAdult(user))
     ),
     'Lazy is not a functor'
 );
@@ -71,11 +89,11 @@ deepEqual(
     await Async.force(
         Async.map(
             isAdult,
-            Async.async(user)
+            Async.of(user)
         )
     ),
     await Async.force(
-        Async.async(isAdult(user))
+        Async.of(isAdult(user))
     ),
     'Async is not a functor'
 );
