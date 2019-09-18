@@ -4,6 +4,7 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./lib",
+    "jsx": "react",
     "strict": true,
     "esModuleInterop": true,
     "downlevelIteration": true
