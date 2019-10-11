@@ -3,26 +3,29 @@
     "start:monads": "parcel src/monads/index.html",
     "prepare": "tsc",
     "pretest": "tsc --noEmit",
-    "test": "ts-node test"
+    "test": "ava"
   },
   "devDependencies": {
-    "@types/node": "^12.7.5",
-    "fp-ts": "^2.0.5",
+    "@types/node": "^12.7.12",
+    "fp-ts": "^2.1.0",
     "ts-node": "^8.4.1",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.4"
   },
   "peerDependencies": {
-    "fp-ts": "^2.0.5"
+    "fp-ts": "^2.1.0"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.27",
-    "@types/react": "^16.9.2",
-    "@types/react-dom": "^16.9.0",
-    "bluebird": "^3.5.5",
+    "@types/lodash": "^4.14.144",
+    "@types/react": "^16.9.5",
+    "@types/react-dom": "^16.9.1",
+    "ava": "^2.4.0",
+    "bluebird": "^3.7.0",
     "fluture": "^11.0.3",
     "fp-ts-fluture": "^0.5.0",
-    "parcel-bundler": "^1.12.3",
-    "react": "^16.9.0",
+    "lodash": "^4.17.15",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.10.2",
     "react-dom": "^16.9.0",
     "rxjs": "^6.5.3",
     "ts-node-dev": "^1.0.0-pre.42"
