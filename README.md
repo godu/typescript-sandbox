@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.com/godu/typescript-sandbox.svg?branch=master)](https://travis-ci.com/godu/typescript-sandbox)
