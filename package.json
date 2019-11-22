@@ -6,28 +6,28 @@
     "test": "ava"
   },
   "devDependencies": {
-    "@types/node": "^12.7.12",
-    "fp-ts": "^2.1.0",
-    "ts-node": "^8.4.1",
-    "typescript": "^3.6.4"
+    "@types/node": "^12.12.11",
+    "fp-ts": "^2.1.2",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.7.2"
   },
   "peerDependencies": {
-    "fp-ts": "^2.1.0"
+    "fp-ts": "^2.1.2"
   },
   "dependencies": {
-    "@types/bluebird": "^3.5.27",
-    "@types/lodash": "^4.14.144",
-    "@types/react": "^16.9.5",
-    "@types/react-dom": "^16.9.1",
+    "@types/bluebird": "^3.5.29",
+    "@types/lodash": "^4.14.149",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
     "ava": "^2.4.0",
-    "bluebird": "^3.7.0",
-    "fluture": "^11.0.3",
+    "bluebird": "^3.7.1",
+    "fluture": "^11.0.2",
     "fp-ts-fluture": "^0.5.0",
     "lodash": "^4.17.15",
     "parcel-bundler": "^1.12.4",
-    "react": "^16.10.2",
-    "react-dom": "^16.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "rxjs": "^6.5.3",
-    "ts-node-dev": "^1.0.0-pre.42"
+    "ts-node-dev": "^1.0.0-pre.44"
   }
 }
