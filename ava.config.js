@@ -1,12 +1,8 @@
 export default {
     "files": [
         "test/**/*",
+        "!test/**/helpers/**/*"
     ],
-    "helpers": [
-        "**/helpers/**/*"
-    ],
-    "verbose": true,
-    "compileEnhancements": false,
     "extensions": [
         "ts"
     ],
