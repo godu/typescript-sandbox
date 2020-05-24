@@ -1,4 +1,5 @@
 {
+  "name": "typescript-sandbox",
   "scripts": {
     "start:monads": "parcel src/monads/index.html",
     "prepare": "tsc",
