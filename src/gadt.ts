@@ -10,54 +10,101 @@ type Equal<A, B> = ((a: A) => B) & ((b: B) => A)
 const identity = <T>(t: T): T => t;
 
 export type Exp<A>
-    = ["Int", Equal<A, number>, number]
-    | ["Add", Equal<A, number>, Exp<number>, Exp<number>]
-    | ["Mul", Equal<A, number>, Exp<number>, Exp<number>]
-    | ["Bool", Equal<A, boolean>, boolean]
-    | ["Eq", Equal<A, boolean>, Exp<number>, Exp<number>]
+    = {
+        type: "Int",
+        id: Equal<A, number>,
+        value: number
+    }
+    | {
+        type: "Add",
+        id: Equal<A, number>,
+        values: [Exp<number>, Exp<number>]
+    }
+    | {
+        type: "Mul",
+        id: Equal<A, number>,
+        values: [Exp<number>, Exp<number>]
+    }
+    | {
+        type: "Bool",
+        id: Equal<A, boolean>,
+        value: boolean
+    }
+    | {
+        type: "Eq",
+        id: Equal<A, boolean>,
+        values: [Exp<number>, Exp<number>]
+    }
 
-export const int = (a: number): Exp<number> => ["Int", identity, a];
-export const add = (a: Exp<number>, b: Exp<number>): Exp<number> => ["Add", identity, a, b];
-export const mul = (a: Exp<number>, b: Exp<number>): Exp<number> => ["Mul", identity, a, b];
-export const bool = (a: boolean): Exp<boolean> => ["Bool", identity, a];
-export const eq = (a: Exp<number>, b: Exp<number>): Exp<boolean> => ["Eq", identity, a, b];
+export const int = (a: number): Exp<number> => ({
+    type: "Int",
+    id: identity,
+    value: a
+});
 
-export const evaluate = <A>(a: Exp<A>): A => {
-    switch(a[0]) {
+export const add = (a: Exp<number>, b: Exp<number>): Exp<number> => ({
+    type: "Add",
+    id: identity,
+    values: [a, b]
+});
+
+export const mul = (a: Exp<number>, b: Exp<number>): Exp<number> => ({ type: "Mul", id: identity, values: [a, b] });
+export const bool = (a: boolean): Exp<boolean> => ({
+    type: "Bool",
+    id: identity,
+    value: a
+});
+
+export const eq = (a: Exp<number>, b: Exp<number>): Exp<boolean> => ({
+    type: "Eq",
+    id: identity,
+    values: [a, b]
+});
+
+export const evaluate = <A>(exp: Exp<A>): A => {
+    switch (exp.type) {
         case "Int": {
-            return a[1](a[2])
+            const {id, value} = exp;
+            return id(value)
         }
         case "Add": {
-            return a[1](evaluate(a[2]) + evaluate(a[3]))
+            const {id, values: [a, b]} = exp;
+            return id(evaluate(a) + evaluate(b))
         }
         case "Mul": {
-            return a[1](evaluate(a[2]) * evaluate(a[3]))
+            const {id, values: [a, b]} = exp;
+            return id(evaluate(a) * evaluate(b))
         }
         case "Bool": {
-            return a[1](a[2])
+            const {id, value} = exp;
+            return id(value)
         }
         case "Eq": {
-            return a[1](evaluate(a[2]) === evaluate(a[3]))
+            const {id, values: [a, b]} = exp;
+            return id(evaluate(a) === evaluate(b))
         }
     }
 }
 
-export const show = <A>(a: Exp<A>): string => {
-    switch(a[0]) {
+export const show = <A>(exp: Exp<A>): string => {
+    switch (exp.type) {
         case "Int": {
-            return `${a[2]}`
+            return `${exp.value}`
         }
         case "Add": {
-            return `(${show(a[2])}) + (${show(a[3])})`
+            const {values: [a, b]} = exp;
+            return `(${show(a)}) + (${show(b)})`
         }
         case "Mul": {
-            return `(${show(a[2])}) * (${show(a[3])})`
+            const {values: [a, b]} = exp;
+            return `(${show(a)}) * (${show(b)})`
         }
         case "Bool": {
-            return `${a[2]}`
+            return `${exp.value}`
         }
         case "Eq": {
-            return `(${show(a[2])}) == (${show(a[3])})`
+            const {values: [a, b]} = exp;
+            return `(${show(a)}) == (${show(b)})`
         }
     }
 }
