@@ -6,82 +6,82 @@
     purescript-leibniz https://github.com/paf31/purescript-leibniz
 */
 
-type Equal<A, B> = ((a: A) => B) & ((b: B) => A)
+type Coercible<A, B> = ((a: A) => B) & ((b: B) => A)
 const identity = <T>(t: T): T => t;
 
 export type Exp<A>
     = {
         type: "Int",
-        id: Equal<A, number>,
+        coerce: Coercible<A, number>,
         value: number
     }
     | {
         type: "Add",
-        id: Equal<A, number>,
+        coerce: Coercible<A, number>,
         values: [Exp<number>, Exp<number>]
     }
     | {
         type: "Mul",
-        id: Equal<A, number>,
+        coerce: Coercible<A, number>,
         values: [Exp<number>, Exp<number>]
     }
     | {
         type: "Bool",
-        id: Equal<A, boolean>,
+        coerce: Coercible<A, boolean>,
         value: boolean
     }
     | {
         type: "Eq",
-        id: Equal<A, boolean>,
+        coerce: Coercible<A, boolean>,
         values: [Exp<number>, Exp<number>]
     }
 
 export const int = (a: number): Exp<number> => ({
     type: "Int",
-    id: identity,
+    coerce: identity,
     value: a
 });
 
 export const add = (a: Exp<number>, b: Exp<number>): Exp<number> => ({
     type: "Add",
-    id: identity,
+    coerce: identity,
     values: [a, b]
 });
 
-export const mul = (a: Exp<number>, b: Exp<number>): Exp<number> => ({ type: "Mul", id: identity, values: [a, b] });
+export const mul = (a: Exp<number>, b: Exp<number>): Exp<number> => ({ type: "Mul", coerce: identity, values: [a, b] });
 export const bool = (a: boolean): Exp<boolean> => ({
     type: "Bool",
-    id: identity,
+    coerce: identity,
     value: a
 });
 
 export const eq = (a: Exp<number>, b: Exp<number>): Exp<boolean> => ({
     type: "Eq",
-    id: identity,
+    coerce: identity,
     values: [a, b]
 });
 
 export const evaluate = <A>(exp: Exp<A>): A => {
     switch (exp.type) {
         case "Int": {
-            const {id, value} = exp;
-            return id(value)
+            const {coerce, value} = exp;
+            return coerce(value)
         }
         case "Add": {
-            const {id, values: [a, b]} = exp;
-            return id(evaluate(a) + evaluate(b))
+            const {coerce, values: [a, b]} = exp;
+            return coerce(evaluate(a) + evaluate(b))
         }
         case "Mul": {
-            const {id, values: [a, b]} = exp;
-            return id(evaluate(a) * evaluate(b))
+            const {coerce, values: [a, b]} = exp;
+            return coerce(evaluate(a) * evaluate(b))
         }
         case "Bool": {
-            const {id, value} = exp;
-            return id(value)
+            const {coerce, value} = exp;
+            return coerce(value)
         }
         case "Eq": {
-            const {id, values: [a, b]} = exp;
-            return id(evaluate(a) === evaluate(b))
+            const {coerce, values: [a, b]} = exp;
+            return coerce(evaluate(a) === evaluate(b))
         }
     }
 }
