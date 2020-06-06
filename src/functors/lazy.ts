@@ -11,3 +11,11 @@ export function force<A>(ma: Lazy<A>): A {
 export function map<A, B>(f: (a: A) => B, ma: Lazy<A>): Lazy<B> {
     return () => f(force(ma))
 };
+
+export function ap<A, B, C>(f: (a: A) => (b: B) => C, ma: Lazy<A>, mb: Lazy<B>): Lazy<C> {
+    return () => f(force(ma))(force(mb));
+};
+
+export function fmap<A, B>(f: (a: A) => Lazy<B>, ma: Lazy<A>) {
+    return () => force(f(force(ma)));
+}

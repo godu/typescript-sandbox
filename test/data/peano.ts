@@ -1,7 +1,7 @@
 import test from 'ava';
 import { fromNumber, equal, add, multiply, zero, greaterOrEqual, one } from '../../src/data/peano';
 import { random } from 'lodash/fp';
-import { isReflexive, isSymmetric, isTransitive, isAssociative, isIdentity, isCommutative, isDistributive, isAnnihilative, isAntisymmetric } from './helpers/quickcheck';
+import { isReflexive, isSymmetric, isTransitive, isAssociative, isIdentity, isCommutative, isDistributive, isAnnihilative, isAntisymmetric } from '../helpers/quickcheck';
 
 const MIN = 0;
 const MAX = 10;

@@ -1,5 +1,5 @@
 import test from 'ava';
-import {isReflexive, isSymmetric, isTransitive, isAssociative, isIdentity, isCommutative, isDistributive, isAnnihilative, isAntisymmetric, isInverseAdditive} from './helpers/quickcheck';
+import { isReflexive, isSymmetric, isTransitive, isAssociative, isIdentity, isCommutative, isDistributive, isAnnihilative, isAntisymmetric, isInverseAdditive } from '../helpers/quickcheck';
 import { fromNumber, equal, add, zero, multiply, one, greaterOrEqual, negate } from '../../src/data/integer';
 import { random } from 'lodash/fp';
 
