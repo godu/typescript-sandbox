@@ -1,6 +1,6 @@
 import test from 'ava';
 import { pipe } from 'lodash/fp';
-import { of, toArray, toPromise, map, take, drop, fold } from '../../src/async-iterator';
+import { of, toArray, toPromise, map, take, drop, fold } from '../src/async-iterator';
 
 test('of', async t => {
     const input = [0, 1, 2, 3, 4];
