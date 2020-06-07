@@ -1,4 +1,4 @@
-import { just, nothing, Maybe, isNothing } from './functors/maybe';
+import { just, nothing, Maybe, isNothing } from './functor/maybe';
 
 export async function* of<A>(iterable: Iterable<A>) {
   yield* iterable;

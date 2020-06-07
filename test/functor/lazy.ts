@@ -33,12 +33,16 @@ test('ap', t => {
   const a = of(3);
   const b = of(3);
 
-  const ab = ap(add, a, b);
+  const add_ : (a: number) => (b: number) => number = add;
+
+  const ab = ap(add_, a, b);
 
   t.is(force(ab), 6)
 
-  const ab_ = ap(add, a, b);
+  const ab_ = ap(add_, a, b);
   t.notDeepEqual(ab, ab_);
+
+  t.is(add_(1)(2),  force(ap(add_, of(1), of(2))))
 });
 
 test('flatMap', t => {

@@ -16,6 +16,6 @@ export function ap<A, B, C>(f: (a: A) => (b: B) => C, ma: Lazy<A>, mb: Lazy<B>):
     return () => f(force(ma))(force(mb));
 };
 
-export function flatMap<A, B>(f: (a: A) => Lazy<B>, ma: Lazy<A>) {
+export function flatMap<A, B>(f: (a: A) => Lazy<B>, ma: Lazy<A>): Lazy<B> {
     return () => force(f(force(ma)));
 }

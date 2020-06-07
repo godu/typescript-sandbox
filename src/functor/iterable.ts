@@ -7,7 +7,7 @@ export function* of<A>(value: A): Iterable<A> {
     }
   }
 }
-export function* from<A>(values: Array<A>): Iterable<A> {
+export function from<A>(values: Array<A>): Iterable<A> {
   return {
     *[Symbol.iterator]() {
       yield* values
@@ -55,6 +55,22 @@ export function filter<A>(predicate: (a: A) => boolean) {
   };
 };
 
+export function take<A>(count: number) {
+  return function (ma: Iterable<A>): Iterable<A> {
+    return {
+      *[Symbol.iterator]() {
+        let i = count;
+        if (i <= 0) return;
+        for (const value of ma) {
+          yield value;
+          i = i - 1;
+          if (i <= 0) return;
+        }
+      }
+    }
+  };
+}
+
 // export function ap<A, B, C>(f: (a: A) => (b: B) => C, ma: Iterable<A>, mb: Iterable<B>): Iterable<C> {
 //   return {
 //     *[Symbol.iterator]() {
@@ -90,4 +106,27 @@ export function fold<A, B>(
     }
     return acc;
   };
+};
+
+export function scan<A, B>(
+  concat: (a: A, acc: B) => B,
+  initial: B
+) {
+  return function* (ma: Iterable<A>): Iterable<B> {
+    let acc: B = initial;
+    for (const value of ma) {
+      acc = concat(value, acc);
+      yield acc;
+    }
+  };
+};
+
+export function repeat<A, B>(ma: Iterable<A>): Iterable<A> {
+  return {
+    *[Symbol.iterator]() {
+      while (true) {
+        yield* ma
+      }
+    }
+  }
 };
