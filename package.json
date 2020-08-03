@@ -1,10 +1,10 @@
 {
   "name": "typescript-sandbox",
   "scripts": {
-    "start:monads": "parcel src/monads/index.html",
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
     "pretest": "tsc --noEmit",
-    "test": "ava",
-    "build": "parcel build src/*.html"
+    "test": "ava"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.158",

@@ -1,4 +1,4 @@
-name: Continuous integration 👮
+name: Continuous deployment 🧑‍🎨
 
 on:
   push:
@@ -22,10 +22,10 @@ jobs:
       - name: Setup node 🔨
         uses: actions/setup-node@v1
         with:
-          node-version: 'latest'
-      - name: Install 🔧 
+          node-version: "latest"
+      - name: Install 🔧
         run: npm ci
-      - name: Install 🔧 
+      - name: Install 🔧
         run: npm run build -- --public-url /typescript-sandbox
       - name: Deploy 🧾
         uses: JamesIves/github-pages-deploy-action@releases/v3
