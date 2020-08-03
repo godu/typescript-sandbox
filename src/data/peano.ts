@@ -81,10 +81,10 @@ export const multiply = (x: Peano, y: Peano): Peano => {
 //     return greaterOrEqual(pred(x), pred(y));
 // };
 
-export const greaterOrEqual = (x: Peano, y: Peano): boolean=> {
+export const greaterOrEqual = (x: Peano, y: Peano): boolean => {
     let x_ = x;
     let y_ = y;
-    while(true) {
+    while (true) {
         if (isZero(x_) && isZero(y_)) return true;
         if (isZero(x_)) return true;
         if (isZero(y_)) return false;

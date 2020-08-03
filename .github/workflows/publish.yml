@@ -25,5 +25,11 @@ jobs:
           node-version: 'latest'
       - name: Install 🔧 
         run: npm ci
-      - name: Test 🔬
-        run: npm test
+      - name: Install 🔧 
+        run: npm run build -- --public-url /typescript-sandbox
+      - name: Deploy 🧾
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: ./dist

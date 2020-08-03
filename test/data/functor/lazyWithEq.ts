@@ -1,6 +1,6 @@
 import test from 'ava';
-import { Lazy, force, map, of, ap, flatMap} from '../../src/functor/lazyWithEq';
-import { add, pipe, identity } from 'lodash/fp';
+import { force, map, of, ap, flatMap } from '../../../src/data/functor/lazyWithEq';
+import { add, identity } from 'lodash/fp';
 
 test('of', t => {
   const a = of(3);

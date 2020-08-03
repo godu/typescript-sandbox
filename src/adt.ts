@@ -1,8 +1,8 @@
 type Shape = 'Circle' | 'Triangle'
-           | 'Diamond' | 'Pentagon';
+  | 'Diamond' | 'Pentagon';
 
 type Digit = 0 | 1 | 2 | 3 | 4
-           | 5 | 6 | 7 | 8 | 9;
+  | 5 | 6 | 7 | 8 | 9;
 
 type Void = never;
 type Unit = [];
@@ -41,11 +41,11 @@ toUnit(toNull(unit)) === unit
 // type ShapeOrDigit = "Circle" | "Triangle"
 //                   | "Diamond" | "Pentagon"
 //                   | 0 | 1 | 2 | 3 | 4
-                  // | 5 | 6 | 7 | 8 | 9;
+// | 5 | 6 | 7 | 8 | 9;
 
 
-type Sum<A, B> = {type: 'left', value: A}
-               | {type: 'right', value: B};
+type Sum<A, B> = { type: 'left', value: A }
+  | { type: 'right', value: B };
 
 type ShapeOrShape = Sum<Shape, Shape>;
 

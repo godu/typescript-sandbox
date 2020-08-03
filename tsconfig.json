@@ -8,8 +8,5 @@
     "strict": true,
     "esModuleInterop": true,
     "downlevelIteration": true
-  },
-  "files": [
-    "src/rxjs.ts"
-  ]
+  }
 }

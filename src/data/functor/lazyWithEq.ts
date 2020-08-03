@@ -28,7 +28,7 @@ const ap_ = <A, B, C>(f: (a: A) => (b: B) => C, ma: Lazy<A>, mb: Lazy<B>): C => 
     const b = force(mb);
     return f(a)(b);
 }
-export function ap<A, B, C>(f: (a: A) =>(b: B) => C, ma: Lazy<A>, mb: Lazy<B>): Lazy<C> {
+export function ap<A, B, C>(f: (a: A) => (b: B) => C, ma: Lazy<A>, mb: Lazy<B>): Lazy<C> {
     return lazy<C, (f: (a: A) => (b: B) => C, ma: Lazy<A>, mb: Lazy<B>) => C>(ap_, f, ma, mb);
 };
 
@@ -36,7 +36,7 @@ const flatMap_ = <A, B>(f: (a: A) => Lazy<B>, ma: Lazy<A>): B => {
     const a = force(ma);
     const mb = f(a);
     return force(mb);
-} 
+}
 export function flatMap<A, B>(f: (a: A) => Lazy<B>, ma: Lazy<A>) {
     return lazy<B, (f: (a: A) => Lazy<B>, ma: Lazy<A>) => B>(flatMap_, f, ma);
 }

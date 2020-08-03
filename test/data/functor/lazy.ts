@@ -1,6 +1,6 @@
 import test from 'ava';
-import { Lazy, force, map, of, ap, flatMap} from '../../src/functor/lazy';
-import { add, pipe, identity } from 'lodash/fp';
+import { force, map, of, ap, flatMap } from '../../../src/data/functor/lazy';
+import { add, identity } from 'lodash/fp';
 
 test('of', t => {
   const a = of(3);
@@ -33,7 +33,7 @@ test('ap', t => {
   const a = of(3);
   const b = of(3);
 
-  const add_ : (a: number) => (b: number) => number = add;
+  const add_: (a: number) => (b: number) => number = add;
 
   const ab = ap(add_, a, b);
 
@@ -42,7 +42,7 @@ test('ap', t => {
   const ab_ = ap(add_, a, b);
   t.notDeepEqual(ab, ab_);
 
-  t.is(add_(1)(2),  force(ap(add_, of(1), of(2))))
+  t.is(add_(1)(2), force(ap(add_, of(1), of(2))))
 });
 
 test('flatMap', t => {

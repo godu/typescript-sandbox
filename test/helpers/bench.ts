@@ -1,4 +1,4 @@
-import test, { Macro } from 'ava';
+import { Macro } from 'ava';
 import { performance } from 'perf_hooks';
 
 export const bench = <T extends any[], R>(TIMES: number): Macro<[

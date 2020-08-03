@@ -1,5 +1,5 @@
 
-import {ExecutionContext} from 'ava';
+import { ExecutionContext } from 'ava';
 
 export function isReflexive<T, C>(
     t: ExecutionContext<C>,

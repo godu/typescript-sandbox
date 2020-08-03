@@ -1,6 +1,6 @@
 import test from 'ava';
-import { noop, pipe, multiply, take } from 'lodash/fp';
-import { Lazy, force, map, flatMap, of } from '../src/functor/lazy';
+import { noop } from 'lodash/fp';
+import { Lazy, force, map, flatMap, of } from '../../src/data/functor/lazy';
 // import { Lazy, force, map, flatMap, of } from '../src/functor/lazyWithEq';
 
 const throw_ = (message?: string) => { throw new Error(message) };

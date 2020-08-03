@@ -27,7 +27,7 @@ export const multiply = ([x1, y1]: Integer, [x2, y2]: Integer): Integer =>
         N.add(N.multiply(x1, y2), N.multiply(y1, x2))
     ];
 
-export const greaterOrEqual = ([x1, y1]: Integer, [x2, y2]: Integer): boolean => 
+export const greaterOrEqual = ([x1, y1]: Integer, [x2, y2]: Integer): boolean =>
     N.greaterOrEqual(
         N.add(x1, y2),
         N.add(y1, x2)

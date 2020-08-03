@@ -64,23 +64,23 @@ export const eq = (a: Exp<number>, b: Exp<number>): Exp<boolean> => ({
 export const evaluate = <A>(exp: Exp<A>): A => {
     switch (exp.type) {
         case "Int": {
-            const {coerce, value} = exp;
+            const { coerce, value } = exp;
             return coerce(value)
         }
         case "Add": {
-            const {coerce, values: [a, b]} = exp;
+            const { coerce, values: [a, b] } = exp;
             return coerce(evaluate(a) + evaluate(b))
         }
         case "Mul": {
-            const {coerce, values: [a, b]} = exp;
+            const { coerce, values: [a, b] } = exp;
             return coerce(evaluate(a) * evaluate(b))
         }
         case "Bool": {
-            const {coerce, value} = exp;
+            const { coerce, value } = exp;
             return coerce(value)
         }
         case "Eq": {
-            const {coerce, values: [a, b]} = exp;
+            const { coerce, values: [a, b] } = exp;
             return coerce(evaluate(a) === evaluate(b))
         }
     }
@@ -92,18 +92,18 @@ export const show = <A>(exp: Exp<A>): string => {
             return `${exp.value}`
         }
         case "Add": {
-            const {values: [a, b]} = exp;
+            const { values: [a, b] } = exp;
             return `(${show(a)}) + (${show(b)})`
         }
         case "Mul": {
-            const {values: [a, b]} = exp;
+            const { values: [a, b] } = exp;
             return `(${show(a)}) * (${show(b)})`
         }
         case "Bool": {
             return `${exp.value}`
         }
         case "Eq": {
-            const {values: [a, b]} = exp;
+            const { values: [a, b] } = exp;
             return `(${show(a)}) == (${show(b)})`
         }
     }

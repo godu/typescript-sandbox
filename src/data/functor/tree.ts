@@ -1,7 +1,7 @@
 export interface Leaf { readonly _tag: 'Leaf' };
 export interface Node<A> {
-  readonly _tag: 'Node', readonly value: A
-  readonly left: Tree<A>, readonly right: Tree<A>
+    readonly _tag: 'Node', readonly value: A
+    readonly left: Tree<A>, readonly right: Tree<A>
 }
 export type Tree<A> = Leaf | Node<A>;
 

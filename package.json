@@ -2,33 +2,26 @@
   "name": "typescript-sandbox",
   "scripts": {
     "start:monads": "parcel src/monads/index.html",
-    "prepare": "tsc",
     "pretest": "tsc --noEmit",
-    "test": "ava"
+    "test": "ava",
+    "build": "parcel build src/*.html"
   },
   "devDependencies": {
-    "@types/node": "^14.0.11",
-    "fp-ts": "^2.6.2",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.5"
-  },
-  "peerDependencies": {
-    "fp-ts": "^2.6.2"
-  },
-  "dependencies": {
-    "@types/bluebird": "^3.5.32",
-    "@types/lodash": "^4.14.155",
-    "@types/react": "^16.9.35",
+    "@types/lodash": "^4.14.158",
+    "@types/node": "^14.0.27",
     "@types/react-dom": "^16.9.8",
-    "ava": "^3.8.2",
-    "bluebird": "^3.7.2",
-    "fluture": "^12.2.1",
+    "@types/react": "^16.9.44",
+    "ava": "^3.11.1",
+    "fluture": "^12.3.1",
     "fp-ts-fluture": "^0.6.5",
-    "lodash": "^4.17.15",
+    "fp-ts": "^2.7.1",
+    "lodash": "^4.17.19",
     "parcel-bundler": "^1.12.4",
-    "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "rxjs": "^6.5.5",
-    "ts-node-dev": "^1.0.0-pre.44"
+    "react": "^16.13.1",
+    "rxjs": "^6.6.2",
+    "ts-node-dev": "1.0.0-pre.56",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
   }
 }

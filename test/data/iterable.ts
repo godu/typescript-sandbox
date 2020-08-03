@@ -1,8 +1,8 @@
-import test, { Macro } from 'ava';
+import test from 'ava';
 import * as Array from 'lodash/fp';
-import {pipe, range} from 'lodash/fp';
-import * as Iterable from '../src/functor/iterable'
-import { bench } from './helpers/bench';
+import { pipe, range } from 'lodash/fp';
+import * as Iterable from '../../src/data/functor/iterable'
+import { bench } from '../helpers/bench';
 
 const input = range(0)(100);
 const expected = 475252470;
