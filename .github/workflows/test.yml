@@ -1,4 +1,4 @@
-name: Continuous integration 👮
+name: 👮 Continuous integration
 
 on:
   push:
@@ -22,8 +22,8 @@ jobs:
       - name: Setup node 🔨
         uses: actions/setup-node@v1
         with:
-          node-version: 'latest'
-      - name: Install 🔧 
+          node-version: "14"
+      - name: Install 🔧
         run: npm ci
       - name: Test 🔬
         run: npm test

@@ -1,4 +1,4 @@
-name: Continuous deployment 🧑‍🎨
+name: 🧑‍🎨 Continuous deployment
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Setup node 🔨
         uses: actions/setup-node@v1
         with:
-          node-version: "latest"
+          node-version: "14"
       - name: Install 🔧
         run: npm ci
       - name: Install 🔧
@@ -32,4 +32,4 @@ jobs:
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: ./dist
+          FOLDER: dist
