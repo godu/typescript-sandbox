@@ -13,12 +13,12 @@ if (canvas === null) throw new TypeError('canvas');
 const gl = canvas.getContext('webgl');
 if (gl === null) throw new TypeError('webgl');
 
-canvas.width = canvas.clientWidth;
-canvas.height = canvas.clientHeight;
+let width = canvas.width = canvas.clientWidth;
+let height = canvas.height = canvas.clientHeight;
 gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
 window.onresize = function () { // reset canvas size when window size is changed
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+    width = canvas.width = canvas.clientWidth;
+    height = canvas.height = canvas.clientHeight;
     gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
 }
 
@@ -69,8 +69,8 @@ function draw(gl: WebGLRenderingContext) {
         if (window.MouseEvent && event instanceof MouseEvent && prevEvent instanceof MouseEvent) {
             const diffTransformation = mat4.create();
             mat4.invert(diffTransformation, modelTransformation);
-            mat4.rotateX(diffTransformation, diffTransformation, (event.y - prevEvent.y) * 0.01);
-            mat4.rotateY(diffTransformation, diffTransformation, (event.x - prevEvent.x) * 0.01);
+            mat4.rotateX(diffTransformation, diffTransformation, (event.y - prevEvent.y) * 4 / height);
+            mat4.rotateY(diffTransformation, diffTransformation, (event.x - prevEvent.x) * 4 / width);
             mat4.multiply(diffTransformation, diffTransformation, modelTransformation)
             mat4.multiply(modelTransformation, modelTransformation, diffTransformation);
             prevEvent = event;
@@ -78,8 +78,8 @@ function draw(gl: WebGLRenderingContext) {
         if (window.TouchEvent && event instanceof TouchEvent && prevEvent instanceof TouchEvent) {
             const diffTransformation = mat4.create();
             mat4.invert(diffTransformation, modelTransformation);
-            mat4.rotateX(diffTransformation, diffTransformation, (event.touches[0].clientY - prevEvent.touches[0].clientY) * 0.01);
-            mat4.rotateY(diffTransformation, diffTransformation, (event.touches[0].clientX - prevEvent.touches[0].clientX) * 0.01);
+            mat4.rotateX(diffTransformation, diffTransformation, (event.touches[0].clientY - prevEvent.touches[0].clientY) * 4 / height);
+            mat4.rotateY(diffTransformation, diffTransformation, (event.touches[0].clientX - prevEvent.touches[0].clientX) * 4 / width);
             mat4.multiply(diffTransformation, diffTransformation, modelTransformation)
             mat4.multiply(modelTransformation, modelTransformation, diffTransformation);
             prevEvent = event;
