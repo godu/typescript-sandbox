@@ -45,6 +45,11 @@ function draw(gl: WebGLRenderingContext) {
     let rotateY = -0.5;  // rotation of cube about the y-axis
     let rotateZ = 0;  // rotation of cube about the y-axis
 
+    const modelTransformation = mat4.create();
+
+    mat4.rotateX(modelTransformation, modelTransformation, rotateX);
+    mat4.rotateY(modelTransformation, modelTransformation, rotateY);
+    mat4.rotateZ(modelTransformation, modelTransformation, rotateZ);
 
     function drawPrimitive(primitiveType: number, color: Float32List, vertices: number[]) {
         gl.enableVertexAttribArray(aCoords);
@@ -60,16 +65,23 @@ function draw(gl: WebGLRenderingContext) {
         prevEvent = event;
     }
     function move(event: MouseEvent | TouchEvent) {
-        if (window.MouseEvent && event instanceof MouseEvent && prevEvent instanceof MouseEvent) {
-            rotateY += (event.x - prevEvent.x) * 0.01 * Math.cos(rotateX);
-            rotateX += (event.y - prevEvent.y) * 0.01;
 
+        if (window.MouseEvent && event instanceof MouseEvent && prevEvent instanceof MouseEvent) {
+            const diffTransformation = mat4.create();
+            mat4.invert(diffTransformation, modelTransformation);
+            mat4.rotateX(diffTransformation, diffTransformation, (event.y - prevEvent.y) * 0.01);
+            mat4.rotateY(diffTransformation, diffTransformation, (event.x - prevEvent.x) * 0.01);
+            mat4.multiply(diffTransformation, diffTransformation, modelTransformation)
+            mat4.multiply(modelTransformation, modelTransformation, diffTransformation);
             prevEvent = event;
         }
         if (window.TouchEvent && event instanceof TouchEvent && prevEvent instanceof TouchEvent) {
-            rotateY += (event.touches[0].clientX - prevEvent.touches[0].clientX) * 0.01 * Math.cos(rotateX);
-            rotateX += (event.touches[0].clientY - prevEvent.touches[0].clientY) * 0.01;
-
+            const diffTransformation = mat4.create();
+            mat4.invert(diffTransformation, modelTransformation);
+            mat4.rotateX(diffTransformation, diffTransformation, (event.touches[0].clientY - prevEvent.touches[0].clientY) * 0.01);
+            mat4.rotateY(diffTransformation, diffTransformation, (event.touches[0].clientX - prevEvent.touches[0].clientX) * 0.01);
+            mat4.multiply(diffTransformation, diffTransformation, modelTransformation)
+            mat4.multiply(modelTransformation, modelTransformation, diffTransformation);
             prevEvent = event;
         }
     }
@@ -106,9 +118,7 @@ function draw(gl: WebGLRenderingContext) {
         gl.uniformMatrix4fv(uProjection, false, projection);
 
         mat4.lookAt(modelview, [0, 0, 6], [0, 0, 0], [0, 1, 0]);
-        mat4.rotateX(modelview, modelview, rotateX);
-        mat4.rotateY(modelview, modelview, rotateY);
-        mat4.rotateZ(modelview, modelview, rotateZ);
+        mat4.multiply(modelview, modelview, modelTransformation);
         gl.uniformMatrix4fv(uModelview, false, modelview);
 
         drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 1], [-1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1]);
