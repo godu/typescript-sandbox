@@ -1,4 +1,4 @@
-import { mat4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 import vertexShaderSource from './index.vert';
 import fragmentShaderSource from './index.frag';
 import { createProgram } from '../utils';
@@ -15,10 +15,12 @@ if (gl === null) throw new TypeError('webgl');
 
 let width = canvas.width = canvas.clientWidth;
 let height = canvas.height = canvas.clientHeight;
+let rpp = 0.000001 * Math.sqrt(height * height + width * width);
 gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
 window.onresize = function () { // reset canvas size when window size is changed
     width = canvas.width = canvas.clientWidth;
     height = canvas.height = canvas.clientHeight;
+    rpp = 0.000001 * Math.sqrt(height * height + width * width);
     gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
 }
 
@@ -69,8 +71,8 @@ function draw(gl: WebGLRenderingContext) {
         if (window.MouseEvent && event instanceof MouseEvent && prevEvent instanceof MouseEvent) {
             const diffTransformation = mat4.create();
             mat4.invert(diffTransformation, modelTransformation);
-            mat4.rotateX(diffTransformation, diffTransformation, (event.y - prevEvent.y) * 4 / height);
-            mat4.rotateY(diffTransformation, diffTransformation, (event.x - prevEvent.x) * 4 / width);
+            const angle = vec3.fromValues((event.y - prevEvent.y), (event.x - prevEvent.x), 0);
+            mat4.rotate(diffTransformation, diffTransformation, vec3.length(angle) * rpp, angle)
             mat4.multiply(diffTransformation, diffTransformation, modelTransformation)
             mat4.multiply(modelTransformation, modelTransformation, diffTransformation);
             prevEvent = event;
@@ -78,8 +80,8 @@ function draw(gl: WebGLRenderingContext) {
         if (window.TouchEvent && event instanceof TouchEvent && prevEvent instanceof TouchEvent) {
             const diffTransformation = mat4.create();
             mat4.invert(diffTransformation, modelTransformation);
-            mat4.rotateX(diffTransformation, diffTransformation, (event.touches[0].clientY - prevEvent.touches[0].clientY) * 4 / height);
-            mat4.rotateY(diffTransformation, diffTransformation, (event.touches[0].clientX - prevEvent.touches[0].clientX) * 4 / width);
+            const angle = vec3.fromValues((event.touches[0].clientY - prevEvent.touches[0].clientY), (event.touches[0].clientX - prevEvent.touches[0].clientX), 0);
+            mat4.rotate(diffTransformation, diffTransformation, vec3.length(angle) * rpp, angle)
             mat4.multiply(diffTransformation, diffTransformation, modelTransformation)
             mat4.multiply(modelTransformation, modelTransformation, diffTransformation);
             prevEvent = event;
