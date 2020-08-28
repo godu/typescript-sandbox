@@ -1,5 +1,7 @@
-import * as React from 'react';
+import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import { render } from 'react-dom';
+import { range, repeat } from 'lodash/fp';
+import * as d3 from 'd3';
 import {
   __,
   get,
@@ -15,7 +17,6 @@ import {
   uniqueId,
   groupBy
 } from 'lodash/fp';
-import { range } from 'd3';
 
 type Player = {
   name: string;
@@ -38,13 +39,29 @@ const PlayerItem = (player: Player) => (
 );
 
 const PlayerList = ({ players }: { players: Player[] }) => (
-  <ol style={{ margin: 0 }}>
-    {players.map(player =>
-      <li key={player.name} >
-        <PlayerItem {...player} />
-      </li>
-    )}
-  </ol>
+  <table >
+    <thead>
+      <tr>
+        <th>Rating</th>
+        <th>Name</th>
+        <th colSpan={2} >Strenght</th>
+      </tr>
+    </thead>
+    <tbody>
+      {players.map(player =>
+        <tr key={player.name}>
+          <td>
+            <strong>
+              {`${player.rating}`.padStart(4, ' ')}
+            </strong>
+          </td>
+          <td>{player.name}</td>
+          <td>{`${player.strenght}`}</td>
+          <td>{`${repeat(player.strenght, '|')}`}</td>
+        </tr>
+      )}
+    </tbody>
+  </table >
 );
 
 const toss = (playerA: Player, playerB: Player): [1, 0] | [0.5, 0.5] | [0, 1] => {
@@ -83,17 +100,69 @@ const nextGeneration = (players: Player[]): Player[] => {
   }, ...nextPlayers];
 };
 
+const margin = { top: 10, right: 30, bottom: 30, left: 40 };
+const width = 460 - margin.left - margin.right;
+const height = 400 - margin.top - margin.bottom;
+
 const Histogram = ({ values }: { values: number[] }) => {
-  const max = Math.max(...values);
+  const element = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (element.current === null) return;
+
+    const svg = d3.select(element.current)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+    const x = d3.scaleLinear()
+      .domain([
+        d3.min(values) || 0,
+        d3.max(values) || 0
+      ])
+      .range([0, width]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+
+    const [min = 0, max = 100] = x.domain();
+    const histogram = d3.histogram()
+      .domain([min, max])
+      .thresholds(x.ticks(70));
+
+    const bins = histogram(values);
+
+    const y = d3.scaleLinear()
+      .range([height, 0]);
+    y.domain([
+      0,
+      d3.max(bins, function (d) { return d.length; }) || 0
+    ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    svg.selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+      .attr("x", 1)
+      .attr("transform", function (d) { return "translate(" + x(d.x0 || 0) + "," + y(d.length) + ")"; })
+      .attr("width", function (d) { return x(d.x1 || 0) - x(d.x0 || 0) - 1; })
+      .attr("height", function (d) { return height - y(d.length); })
+      .style("fill", "#69b3a2")
+
+    return () => {
+      d3.select(element.current).select('svg').remove();
+    }
+  }, [element, values])
 
   return (
     <div>
-      {
-        pipe(
-          map(pipe(times(() => "#"), join(''))),
-          map(v => (<div>{v}</div>))
-        )(values)
-      }
+      <div ref={element} />
     </div>
   );
 }
@@ -109,23 +178,19 @@ const Distribution = ({ values }: { values: number[] }) => {
   )(values);
 
   return (
-    <Histogram values={map(
-      (i: number) => get(i, vs)
-    )(
-      range(
-        Math.floor(min * LINES / max),
-        Math.ceil(max * LINES / max)
-      )
-    )} />
+    <Histogram values={values} />
   );
 }
 
 setInterval(() => {
-  PLAYERS = sortByRating(nextGeneration(PLAYERS))
 }, 0);
 
 const loop = () => {
   requestAnimationFrame(() => {
+    const start = Date.now();
+    while (Date.now() < (start + 20)) {
+      PLAYERS = sortByRating(nextGeneration(PLAYERS))
+    }
     render(
       <>
         <h1>ELO rating system</h1>
@@ -135,12 +200,11 @@ const loop = () => {
         <div style={{ display: "flex" }}>
           <br />
           <PlayerList players={PLAYERS} />
-          <Histogram values={PLAYERS.map(p => p.strenght)} />
         </div >
       </>,
       document.getElementById('app')
     );
-    setTimeout(loop, 1000);
+    loop()
   });
 };
 
