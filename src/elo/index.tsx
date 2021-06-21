@@ -151,8 +151,8 @@ const Histogram = ({ values }: { values: number[] }) => {
       .append("rect")
       .attr("x", 1)
       .attr("transform", function (d) { return "translate(" + x(d.x0 || 0) + "," + y(d.length) + ")"; })
-      .attr("width", function (d) { return x(d.x1 || 0) - x(d.x0 || 0) - 1; })
-      .attr("height", function (d) { return height - y(d.length); })
+      .attr("width", function (d) { return (x(d.x1 || 0) || 0) - (x(d.x0 || 0) || 0) - 1; })
+      .attr("height", function (d) { return height - (y(d.length) || 0); })
       .style("fill", "#69b3a2")
 
     return () => {
