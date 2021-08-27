@@ -8,7 +8,8 @@ import {
     inverse,
     contramap,
     concat,
-    empty
+    empty,
+    Compare
 } from '../../src/data/compare';
 
 test('Compare<number>', t => {
@@ -50,6 +51,41 @@ test('Compare<boolean>', t => {
 
     t.deepEqual(sortBy(inverse(booleanCompare))([true, false, true]), [true, true, false])
 });
+
+
+test('Compare<Rock|Paper|Scissors>', t => {
+    type RockPaperScissors = 'Rock' | 'Paper' | 'Scissors';
+
+    const rockPaperScissorsCompare: Compare<RockPaperScissors> = (a, b) => {
+        switch (a) {
+            case 'Rock':
+                switch (b) {
+                    case 'Rock': return 0;
+                    case 'Paper': return -1;
+                    case 'Scissors': return 1;
+                }
+            case 'Paper':
+                switch (b) {
+                    case 'Rock': return 1;
+                    case 'Paper': return 0;
+                    case 'Scissors': return -1;
+                }
+            case 'Scissors':
+                switch (b) {
+                    case 'Rock': return -1;
+                    case 'Paper': return 1;
+                    case 'Scissors': return 0;
+                }
+        }
+    }
+
+    t.is(rockPaperScissorsCompare('Rock', 'Paper'), -1);
+    t.is(rockPaperScissorsCompare('Scissors', 'Paper'), 1);
+    t.is(rockPaperScissorsCompare('Paper', 'Paper'), 0);
+
+    t.deepEqual(sortBy(rockPaperScissorsCompare)(['Scissors', 'Paper', 'Rock']), ['Rock', 'Paper', 'Scissors'])
+    t.deepEqual(sortBy(rockPaperScissorsCompare)(['Scissors', 'Rock', 'Paper']), ['Scissors', 'Rock', 'Paper'])
+})
 
 test('Constravarint', t => {
     const lengthCompare = contramap<number, string>(numberCompare, s => s.length);
@@ -131,4 +167,4 @@ test('Progression', async t => {
         )(aggregations),
         _sortBy(['level', '-createdAt'], aggregations)
     );
-})
+});
