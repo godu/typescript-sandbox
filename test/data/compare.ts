@@ -9,7 +9,6 @@ import {
   contramap,
   concat,
   empty,
-  Compare,
   divide,
   conquer,
   choose,
@@ -21,12 +20,6 @@ test("Compare<number>", (t) => {
   t.is(numberCompare(0, -0), 0);
 
   t.deepEqual(sortBy(numberCompare)([3, 1, 2, 0]), [0, 1, 2, 3]);
-
-  t.is(inverse(numberCompare)(0, 1), 1);
-  t.is(inverse(numberCompare)(3, 1), -1);
-  t.is(inverse(numberCompare)(0, -0), 0);
-
-  t.deepEqual(sortBy(inverse(numberCompare))([3, 1, 2, 0]), [3, 2, 1, 0]);
 });
 test("Compare<string>", (t) => {
   t.is(stringCompare("aa", "bb"), -1);
@@ -40,16 +33,6 @@ test("Compare<string>", (t) => {
     "cc",
   ]);
 
-  t.is(inverse(stringCompare)("aa", "bb"), 1);
-  t.is(inverse(stringCompare)("cc", "aa"), -1);
-  t.is(inverse(stringCompare)("aa", "aa"), 0);
-
-  t.deepEqual(sortBy(inverse(stringCompare))(["cc", "aa", "bb", "a_"]), [
-    "cc",
-    "bb",
-    "aa",
-    "a_",
-  ]);
 });
 test("Compare<boolean>", (t) => {
   t.is(booleanCompare(false, true), -1);
@@ -57,70 +40,36 @@ test("Compare<boolean>", (t) => {
   t.is(booleanCompare(true, true), 0);
 
   t.deepEqual(sortBy(booleanCompare)([true, false, true]), [false, true, true]);
+});
+
+test('Inverse', t => {
+
+  t.is(inverse(numberCompare)(0, 1), 1);
+  t.is(inverse(numberCompare)(3, 1), -1);
+  t.is(inverse(numberCompare)(0, -0), 0);
+  t.deepEqual(sortBy(inverse(numberCompare))([3, 1, 2, 0]), [3, 2, 1, 0]);
+
+  t.is(inverse(stringCompare)("aa", "bb"), 1);
+  t.is(inverse(stringCompare)("cc", "aa"), -1);
+  t.is(inverse(stringCompare)("aa", "aa"), 0);
+  t.deepEqual(sortBy(inverse(stringCompare))(["cc", "aa", "bb", "a_"]), [
+    "cc",
+    "bb",
+    "aa",
+    "a_",
+  ]);
 
   t.is(inverse(booleanCompare)(false, true), 1);
   t.is(inverse(booleanCompare)(true, false), -1);
   t.is(inverse(booleanCompare)(true, true), 0);
-
   t.deepEqual(sortBy(inverse(booleanCompare))([true, false, true]), [
     true,
     true,
     false,
   ]);
-});
+})
 
-test("Compare<Rock|Paper|Scissors>", (t) => {
-  type RockPaperScissors = "Rock" | "Paper" | "Scissors";
-
-  const rockPaperScissorsCompare: Compare<RockPaperScissors> = (a, b) => {
-    switch (a) {
-      case "Rock":
-        switch (b) {
-          case "Rock":
-            return 0;
-          case "Paper":
-            return -1;
-          case "Scissors":
-            return 1;
-        }
-      case "Paper":
-        switch (b) {
-          case "Rock":
-            return 1;
-          case "Paper":
-            return 0;
-          case "Scissors":
-            return -1;
-        }
-      case "Scissors":
-        switch (b) {
-          case "Rock":
-            return -1;
-          case "Paper":
-            return 1;
-          case "Scissors":
-            return 0;
-        }
-    }
-  };
-
-  t.is(rockPaperScissorsCompare("Rock", "Paper"), -1);
-  t.is(rockPaperScissorsCompare("Scissors", "Paper"), 1);
-  t.is(rockPaperScissorsCompare("Paper", "Paper"), 0);
-
-  t.deepEqual(sortBy(rockPaperScissorsCompare)(["Scissors", "Paper", "Rock"]), [
-    "Rock",
-    "Paper",
-    "Scissors",
-  ]);
-  t.deepEqual(sortBy(rockPaperScissorsCompare)(["Scissors", "Rock", "Paper"]), [
-    "Scissors",
-    "Rock",
-    "Paper",
-  ]);
-});
-
-test("Constravarint", (t) => {
+test("Constravariant", (t) => {
   const lengthCompare = contramap<number, string>(
     numberCompare,
     (s) => s.length

@@ -4,6 +4,5 @@
 ```shell
 $ npm install # Install dependencies
 $ npm test    # Run tests
-$ npm start   # Start web server
-$ npm build   # Build static site
+$ npm start   # Run workshop
 ```
