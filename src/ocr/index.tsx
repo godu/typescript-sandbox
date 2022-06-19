@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client';
 import React, { useCallback, useEffect, useState, DragEvent } from 'react'
 import Tesseract from 'tesseract.js';
 
@@ -84,5 +84,7 @@ const App = (): React.ReactElement => {
     </div>;
 }
 
-const el = document.getElementById('app');
-if (el) ReactDOM.render(<App />, el);
+const container = document.getElementById('app');
+if (!container) throw new TypeError('Container is not found');
+const root = createRoot(container)
+root.render(<App />);

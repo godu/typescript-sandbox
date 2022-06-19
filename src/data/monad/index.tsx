@@ -1,7 +1,7 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { random } from 'lodash/fp';
+import { createRoot } from 'react-dom/client';
+import { curry } from 'ramda';
 import { Kind, URIS } from 'fp-ts/es6/HKT';
 import { Applicative1 } from 'fp-ts/es6/Applicative';
 import { identity } from 'fp-ts/es6/Identity';
@@ -11,6 +11,12 @@ import { task, delay as tDelay } from 'fp-ts/es6/Task';
 import { array } from 'fp-ts/es6/Array';
 import { of, Observable, combineLatest, timer } from 'rxjs';
 import { map, delay } from 'rxjs/operators';
+
+const random = curry((min, max) => {
+    let range = max - min;
+    let random = Math.random() * range + min;
+    return Math.floor(random);
+  });
 
 const App = <F extends URIS>(F: Applicative1<F>) => ({
     height: fHeight,
@@ -69,21 +75,33 @@ const App = <F extends URIS>(F: Applicative1<F>) => ({
 }
 
 
+const identityContainer = document.getElementById('identity');
+if (!identityContainer) throw new TypeError('Identity container is not found');
+const identityRoot = createRoot(identityContainer);
+
 identity.map(
     App(identity)({
         height: identity.of(170),
         weight: identity.of(70)
     }),
-    view => ReactDOM.render(view, document.getElementById('identity'))
+    view => identityRoot.render(view)
 );
+
+const optionContainer = document.getElementById('option');
+if (!optionContainer) throw new TypeError('Option container is not found');
+const optionRoot = createRoot(optionContainer);
 
 option.map(
     App(option)({
         height: option.of(170),
         weight: option.of(70)
     }),
-    view => ReactDOM.render(view, document.getElementById('option'))
+    view => optionRoot.render(view)
 );
+
+const ioContainer = document.getElementById('io');
+if (!ioContainer) throw new TypeError('Io container is not found');
+const ioRoot = createRoot(ioContainer);
 
 setTimeout(
     io.map(
@@ -91,17 +109,21 @@ setTimeout(
             height: io.of(170),
             weight: io.of(70)
         }),
-        view => ReactDOM.render(view, document.getElementById('io'))
+        view => ioRoot.render(view)
     ),
     1000
 );
+
+const taskContainer = document.getElementById('task');
+if (!taskContainer) throw new TypeError('Task container is not found');
+const taskRoot = createRoot(taskContainer);
 
 task.map(
     App(task)({
         height: tDelay(2000)(task.of(170)),
         weight: task.of(70)
     }),
-    view => ReactDOM.render(view, document.getElementById('task'))
+    view => taskRoot.render(view)
 )();
 
 
@@ -110,12 +132,15 @@ const customArray: typeof array = {
     ap: (fab, fa) => fab.map((ab, i) => ab(fa[i]))
 }
 
-ReactDOM.render(
+const arrayContainer = document.getElementById('array');
+if (!arrayContainer) throw new TypeError('Array container is not found');
+const arrayRoot = createRoot(arrayContainer);
+
+arrayRoot.render(
     App(customArray)({
         height: [170, 120],
         weight: [80, 55]
-    }),
-    document.getElementById('array')
+    })
 )
 
 declare module 'fp-ts/es6/HKT' {
@@ -131,11 +156,15 @@ const observable: Applicative1<'Observable'> = {
     ap: (fab, fa) => combineLatest([fab, fa]).pipe(map(([ab, a]) => ab(a))),
 }
 
+const observableContainer = document.getElementById('observable');
+if (!observableContainer) throw new TypeError('Observable container is not found');
+const observableRoot = createRoot(observableContainer);
+
 App(observable)({
     height: timer(0, 1000)
         .pipe(map(() => random(120, 200))),
     weight: timer(0, 1000).pipe(delay(500))
         .pipe(map(() => random(50, 120)))
 }).subscribe(
-    view => ReactDOM.render(view, document.getElementById('observable'))
+    view => observableRoot.render(view)
 );

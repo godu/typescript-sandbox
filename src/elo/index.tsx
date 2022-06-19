@@ -1,22 +1,12 @@
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
-import { render } from 'react-dom';
-import { range, repeat } from 'lodash/fp';
+import { createRoot } from 'react-dom/client';
+import {  repeat } from 'ramda';
 import * as d3 from 'd3';
 import {
-  __,
-  get,
-  pipe,
-  random,
-  shuffle,
-  sortBy,
   times,
-  map,
-  join,
-  mapValues,
-  size,
-  uniqueId,
-  groupBy
-} from 'lodash/fp';
+  curry,
+  sort, descend, prop
+} from 'ramda';
 
 type Player = {
   name: string;
@@ -24,8 +14,38 @@ type Player = {
   rating: number;
 }
 
+
+const random = curry((min, max) => {
+  let range = max - min;
+  let random = Math.random() * range + min;
+  return Math.floor(random);
+});
+
+const shuffle = function<A>(list: A[])  {
+  var idx = -1;
+  var len = list.length;
+  var position;
+  var result: A[] = [];
+  while (++idx < len) {
+      position = Math.floor((idx + 1) * Math.random());
+      result[idx] = result[position];
+      result[position] = list[idx];
+  }
+  return result;
+}
+
+const uniqueId = (label: string) => {
+  let i = 0;
+  return () => {
+    i = i + 1;
+    return `${label}${i}`
+  }
+}
+
+const uniqueIdPlayer = uniqueId('Player_')
+
 const createPlayer = (): Player => ({
-  name: uniqueId('Player_'),
+  name: uniqueIdPlayer(),
   strenght: random(0, 100),
   rating: 1200
 });
@@ -57,7 +77,7 @@ const PlayerList = ({ players }: { players: Player[] }) => (
           </td>
           <td>{player.name}</td>
           <td>{`${player.strenght}`}</td>
-          <td>{`${repeat(player.strenght, '|')}`}</td>
+          <td>{`${repeat('|', player.strenght)}`}</td>
         </tr>
       )}
     </tbody>
@@ -76,7 +96,7 @@ const toss = (playerA: Player, playerB: Player): [1, 0] | [0.5, 0.5] | [0, 1] =>
 const getExpectedScore = (playerA: Player, playerB: Player) =>
   1 / (1 + Math.pow(10, (playerB.rating - playerA.rating) / 400))
 
-const sortByRating = sortBy(pipe(get('rating'), (x: number) => -x))
+const sortByRating = sort<Player>(descend(prop('rating')))
 
 const nextRating = (rating: number, result: 1 | 0.5 | 0, estimatedResult: number, K: number) =>
   rating + Math.round(K * (result - estimatedResult));
@@ -172,10 +192,10 @@ const Distribution = ({ values }: { values: number[] }) => {
 
   const max = Math.max(...values);
   const min = Math.min(...values);
-  const vs = pipe(
-    groupBy((v: number) => Math.floor(v * LINES / max)),
-    mapValues(size)
-  )(values);
+  // const vs = pipe(
+  //   groupBy((v: number): string => `${ Math.floor(v * LINES / max) }`),
+  //   map(length)
+  // )(values);
 
   return (
     <Histogram values={values} />
@@ -185,13 +205,16 @@ const Distribution = ({ values }: { values: number[] }) => {
 setInterval(() => {
 }, 0);
 
+const container = document.getElementById('app');
+if (!container) throw new TypeError('Container is not found');
+const root = createRoot(container)
 const loop = () => {
   requestAnimationFrame(() => {
     const start = Date.now();
     while (Date.now() < (start + 20)) {
       PLAYERS = sortByRating(nextGeneration(PLAYERS))
     }
-    render(
+    root.render(
       <>
         <h1>ELO rating system</h1>
         <h2>Distribution</h2>
@@ -202,7 +225,7 @@ const loop = () => {
           <PlayerList players={PLAYERS} />
         </div >
       </>,
-      document.getElementById('app')
+      
     );
     loop()
   });

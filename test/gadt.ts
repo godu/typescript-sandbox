@@ -1,18 +1,17 @@
-import test, { Macro } from 'ava';
+import test from "ava";
 
-import { int, bool, mul, add, eq, evaluate, show, Exp } from '../src/gadt';
+import { int, bool, mul, add, eq, evaluate, show, Exp } from "../src/gadt";
 
-
-const macro = <A>(): Macro<[Exp<A>, A]> => {
-    const m: Macro<[Exp<A>, A]> = (t, expr, expected) => {
-        const actual = evaluate<A>(expr);
-        t.is(actual, expected);
-    }
-
-    m.title = (_, exp) => show(exp);
-
-    return m;
-}
+const macro = <T>() =>
+  test.macro<[Exp<T>, T]>({
+    exec(t, expr, expected) {
+      const actual = evaluate(expr);
+      t.is(actual, expected);
+    },
+    title(_, exp) {
+      return show(exp);
+    },
+  });
 
 test(macro<number>(), int(1), 1);
 test(macro<number>(), add(int(1), int(2)), 3);

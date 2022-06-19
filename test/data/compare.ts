@@ -1,5 +1,5 @@
 import test from "ava";
-import { orderBy, map, pipe } from "lodash/fp";
+import { sortWith, ascend, descend, prop, map, pipe } from "ramda";
 import {
   sortBy,
   numberCompare,
@@ -296,7 +296,7 @@ test("Progression", async (t) => {
         inverse(contramap(numberCompare, (aggre) => aggre.createdAt))
       )
     )(aggregations),
-    orderBy(["level", "createdAt"], ["asc", "desc"], aggregations)
+    sortWith([ascend(prop("level")), descend(prop("createdAt"))], aggregations)
   );
   t.deepEqual(
     sortBy<Aggregation>(
@@ -309,7 +309,7 @@ test("Progression", async (t) => {
         numberCompare
       )
     )(aggregations),
-    orderBy(["level", "createdAt"], ["asc", "desc"], aggregations)
+    sortWith([ascend(prop("level")), descend(prop("createdAt"))], aggregations)
   );
   t.deepEqual(
     sortBy<Progression>(
@@ -323,8 +323,11 @@ test("Progression", async (t) => {
       )
     )(progressions),
     map(
-      "progression",
-      orderBy(["level", "createdAt"], ["asc", "desc"], aggregations)
+      prop("progression"),
+      sortWith(
+        [ascend(prop("level")), descend(prop("createdAt"))],
+        aggregations
+      )
     )
   );
   t.deepEqual(
@@ -339,8 +342,11 @@ test("Progression", async (t) => {
       )
     )(progressions),
     pipe(
-      orderBy(["level", "createdAt"], ["asc", "desc"]),
-      map("progression")
+      sortWith<Aggregation>([
+        ascend(prop("level")),
+        descend(prop("createdAt")),
+      ]),
+      map(prop("progression"))
     )(aggregations)
   );
 });

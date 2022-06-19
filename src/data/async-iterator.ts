@@ -1,10 +1,12 @@
-import { just, nothing, Maybe, isNothing } from './functor/maybe';
+import { just, nothing, Maybe, isNothing } from "./functor/maybe";
 
-export async function* of<A>(iterable: Iterable<A>) {
+export async function* of<A>(iterable: Iterable<A>): AsyncIterable<A> {
   yield* iterable;
 }
 
-export async function toArray<A>(asyncIterable: AsyncIterable<A>): Promise<Array<A>> {
+export async function toArray<A>(
+  asyncIterable: AsyncIterable<A>
+): Promise<Array<A>> {
   const values: Array<A> = [];
   for await (const value of asyncIterable) {
     values.push(value);
@@ -12,13 +14,15 @@ export async function toArray<A>(asyncIterable: AsyncIterable<A>): Promise<Array
   return values;
 }
 
-export async function toPromise<A>(asyncIterable: AsyncIterable<A>): Promise<A> {
+export async function toPromise<A>(
+  asyncIterable: AsyncIterable<A>
+): Promise<A> {
   let lastValue: Maybe<A> = nothing;
   for await (const value of asyncIterable) {
     lastValue = just(value);
   }
   if (isNothing(lastValue)) {
-    throw new Error('No value');
+    throw new Error("No value");
   }
   return lastValue.value;
 }
@@ -28,17 +32,17 @@ export function map<A, B>(fun: (a: A) => B) {
     for await (const item of asyncIterable) {
       yield fun(item);
     }
-  }
+  };
 }
 
 export function fold<A, B>(fun: (a: A, b: B) => B, identity: B) {
   return async function* (asyncIterable: AsyncIterable<A>) {
-    let accumulator = identity
+    let accumulator = identity;
     for await (const item of asyncIterable) {
       accumulator = fun(item, accumulator);
     }
     yield accumulator;
-  }
+  };
 }
 
 export function take<A>(count: number) {
@@ -49,7 +53,7 @@ export function take<A>(count: number) {
       yield item;
       i = i + 1;
     }
-  }
+  };
 }
 
 export function drop<A>(count: number) {
@@ -59,5 +63,5 @@ export function drop<A>(count: number) {
       if (i >= count) yield item;
       i = i + 1;
     }
-  }
+  };
 }
