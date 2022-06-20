@@ -5,7 +5,7 @@ export default {
   },
   nodeArguments: [
     "--no-warnings",
-    "--loader=ts-node/esm",
+    "--loader=ts-node/esm/transpile-only",
     "--experimental-specifier-resolution=node",
   ],
 };
