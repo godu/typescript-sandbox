@@ -14,7 +14,6 @@
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
-    "ava": "^4.3.0",
     "d3": "^7.4.4",
     "fluture": "^12.3.1",
     "fp-ts": "^2.12.1",
@@ -36,6 +35,9 @@
   },
   "devDependencies": {
     "@parcel/transformer-glsl": "^2.6.1",
-    "@types/ramda": "^0.28.14"
+    "@types/ramda": "^0.28.14",
+    "ava": "^4.3.0",
+    "ava-fast-check": "^6.0.0",
+    "fast-check": "^3.0.0"
   }
 }
