@@ -1,43 +1,19 @@
 {
   "name": "typescript-sandbox",
   "type": "module",
-  "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build",
-    "pretest": "tsc --noEmit",
+    "start:compare": "ts-node-esm src/compare",
+    "start:guess": "ts-node-esm src/guess",
     "test": "ava"
   },
   "dependencies": {
-    "@types/d3": "^7.4.0",
-    "@types/lodash": "^4.14.182",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.14",
-    "@types/react-dom": "^18.0.5",
-    "d3": "^7.4.4",
-    "fluture": "^12.3.1",
-    "fp-ts": "^2.12.1",
-    "fp-ts-fluture": "^0.6.5",
-    "gl-matrix": "^3.4.3",
-    "glslify-bundle": "^5.1.1",
-    "glslify-deps": "^1.3.2",
-    "lodash": "^4.17.21",
-    "parcel": "^2.6.1",
-    "process": "^0.11.10",
-    "ramda": "^0.28.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "rxjs": "^7.5.5",
-    "tesseract.js": "^2.1.5",
-    "ts-node": "^10.8.1",
-    "ts-node-dev": "2.0.0",
-    "typescript": "^4.7.4"
-  },
-  "devDependencies": {
-    "@parcel/transformer-glsl": "^2.6.1",
-    "@types/ramda": "^0.28.14",
-    "ava": "^4.3.0",
-    "ava-fast-check": "^6.0.0",
-    "fast-check": "^3.0.0"
+    "@types/node": "^18.11.9",
+    "@types/sinon": "^10.0.13",
+    "ava": "^5.1.0",
+    "esmock": "^2.0.7",
+    "fp-ts": "~2.13.1",
+    "sinon": "^14.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
   }
 }

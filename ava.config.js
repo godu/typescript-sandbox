@@ -6,6 +6,7 @@ export default {
   nodeArguments: [
     "--no-warnings",
     "--loader=ts-node/esm/transpile-only",
+    "--loader=esmock",
     "--experimental-specifier-resolution=node",
   ],
 };
