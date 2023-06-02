@@ -5,7 +5,7 @@ const fix = <A, B>(f: (a: (a: A) => B) => (a: A) => B): (a: A) => B => f(a => fi
 
 const fac = fix((f: (n: number) => number) => (n: number) => n > 1 ? n * f(n - 1) : 1);
 
-test('fac(5) = 120', t => {
+test('fac', t => {
 	t.is(fac(5), 120);
 });
 
@@ -14,6 +14,20 @@ const replicate = fix<number, <A>(a: A) => A[]>(
 
 test('replicate', t => {
 	t.deepEqual(replicate(3)(5), [5, 5, 5]);
+});
+
+const sum = fix<number[], number>(
+	rec => xs => {
+		if (xs.length === 0) {
+			return 0;
+		}
+
+		const [head, ...tail] = xs;
+		return head + rec(tail);
+	});
+
+test('sum', t => {
+	t.is(sum([1, 3, 9]), 13);
 });
 
 const natural = fix<number, Iterable<number>>(
