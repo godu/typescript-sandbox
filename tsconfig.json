@@ -9,6 +9,7 @@
     "moduleResolution": "Node",
     "strict": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "jsx": "react-jsx",
