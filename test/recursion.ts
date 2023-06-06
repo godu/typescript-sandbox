@@ -42,3 +42,20 @@ test('natural', t => {
 	t.deepEqual([...take(3)(natural)], [0, 1, 2]);
 	t.deepEqual([...take(5)(natural)], [0, 1, 2, 3, 4]);
 });
+
+type Tree<T> = [T] | [Tree<T>, Tree<T>];
+
+const pipe = <A, B, C>(f: (a: A) => B, g: (b: B) => C): ((a: A) => C) => a => g(f(a));
+
+const fibonacci = pipe<number, Tree<number>, number>(
+	fix<number, Tree<number>>(rec => n => (n === 0) ? [0] : ((n === 1) ? [1] : [rec(n - 2), rec(n - 1)])),
+	fix<Tree<number>, number>(rec => n => n.length === 1 ? n[0] : rec(n[0]) + rec(n[1])),
+);
+
+test('fibonacci', t => {
+	t.is(fibonacci(0), 0);
+	t.is(fibonacci(1), 1);
+	t.is(fibonacci(2), 1);
+	t.is(fibonacci(3), 2);
+	t.is(fibonacci(4), 3);
+});
