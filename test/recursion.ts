@@ -1,7 +1,15 @@
+/* eslint-disable unicorn/no-array-callback-reference */
+/* eslint-disable unicorn/no-array-method-this-argument */
+/* eslint-disable @typescript-eslint/no-redeclare */
 import test from 'ava';
+import {type Functor2} from 'fp-ts/lib/Functor.js';
+import {type Kind2, type URIS2} from 'fp-ts/lib/HKT';
+import {pipe} from 'fp-ts/lib/function.js';
 import {take} from '../src/iterable.js';
+import * as ListF from '../src/data/listf.js';
+import * as TreeF from '../src/data/treef.js';
 
-const fix = <A, B>(f: (a: (a: A) => B) => (a: A) => B): (a: A) => B => f(a => fix(f)(a));
+const fix = <A, B>(f: (rec: (a: A) => B) => (a: A) => B): (a: A) => B => f(a => fix(f)(a));
 
 const fac = fix((f: (n: number) => number) => (n: number) => n > 1 ? n * f(n - 1) : 1);
 
@@ -45,11 +53,88 @@ test('natural', t => {
 
 type Tree<T> = [T] | [Tree<T>, Tree<T>];
 
-const pipe = <A, B, C>(f: (a: A) => B, g: (b: B) => C): ((a: A) => C) => a => g(f(a));
+/*
+Hylo :: Functor f => (f b -> b) -> (a -> f a) -> a -> b
+hylo f g = h where h = f . fmap h . g
+*/
+const hylo = <F extends URIS2>(F: Functor2<F>) =>
+	<A, B>(f: (fb: Kind2<F, A, B>) => B, g: (a: A) => Kind2<F, A, A>) =>
+		(a: A): B =>
+			pipe(a, g, fa => F.map(fa, hylo(F)(f, g)), f);
 
-const fibonacci = pipe<number, Tree<number>, number>(
-	fix<number, Tree<number>>(rec => n => (n === 0) ? [0] : ((n === 1) ? [1] : [rec(n - 2), rec(n - 1)])),
-	fix<Tree<number>, number>(rec => n => n.length === 1 ? n[0] : rec(n[0]) + rec(n[1])),
+// Const fibonacci = pipe<number, Tree<number>, number>(
+// 	fix<number, Tree<number>>(rec => n => (n === 0) ? [0] : ((n === 1) ? [1] : [rec(n - 2), rec(n - 1)])),
+// 	fix<Tree<number>, number>(rec => n => n.length === 1 ? n[0] : rec(n[0]) + rec(n[1])),
+// );
+
+// const fibonacci = hylo(Option.Functor)(
+
+// test('fibonacci', t => {
+// 	t.is(fibonacci(0), 0);
+// 	t.is(fibonacci(1), 1);
+// 	t.is(fibonacci(2), 1);
+// 	t.is(fibonacci(3), 2);
+// 	t.is(fibonacci(4), 3);
+// });
+
+const factorial = hylo(ListF.Functor2)<number, number>(
+	xs => {
+		if (xs === undefined) {
+			return 1;
+		}
+
+		const [head, tail] = xs;
+		return head * tail;
+	},
+	n => {
+		if (n === 0) {
+			return undefined;
+		}
+
+		return [n, n - 1];
+	},
+);
+
+test('factorial', t => {
+	t.is(factorial(0), 1);
+	t.is(factorial(1), 1);
+	t.is(factorial(2), 2);
+	t.is(factorial(3), 6);
+	t.is(factorial(4), 24);
+	t.is(factorial(5), 120);
+	t.is(factorial(6), 720);
+	t.is(factorial(7), 5040);
+	t.is(factorial(8), 40_320);
+	t.is(factorial(9), 362_880);
+	t.is(factorial(10), 3_628_800);
+	t.is(factorial(11), 39_916_800);
+	t.is(factorial(12), 479_001_600);
+	t.is(factorial(13), 6_227_020_800);
+	t.is(factorial(14), 87_178_291_200);
+	t.is(factorial(15), 1_307_674_368_000);
+	t.is(factorial(16), 20_922_789_888_000);
+	t.is(factorial(17), 355_687_428_096_000);
+	t.is(factorial(18), 6_402_373_705_728_000);
+	t.is(factorial(19), 121_645_100_408_832_000);
+	t.is(factorial(20), 2_432_902_008_176_640_000);
+});
+
+const fibonacci = hylo(TreeF.Functor2)<number, number>(
+	fa => {
+		const [a, as] = fa;
+		return as.reduce((acc, a) => acc + a, a);
+	},
+	n => {
+		if (n === 0) {
+			return [0, []];
+		}
+
+		if (n === 1) {
+			return [1, []];
+		}
+
+		return [0, [n - 2, n - 1]];
+	},
 );
 
 test('fibonacci', t => {
@@ -58,4 +143,20 @@ test('fibonacci', t => {
 	t.is(fibonacci(2), 1);
 	t.is(fibonacci(3), 2);
 	t.is(fibonacci(4), 3);
+	t.is(fibonacci(5), 5);
+	t.is(fibonacci(6), 8);
+	t.is(fibonacci(7), 13);
+	t.is(fibonacci(8), 21);
+	t.is(fibonacci(9), 34);
+	t.is(fibonacci(10), 55);
+	t.is(fibonacci(11), 89);
+	t.is(fibonacci(12), 144);
+	t.is(fibonacci(13), 233);
+	t.is(fibonacci(14), 377);
+	t.is(fibonacci(15), 610);
+	t.is(fibonacci(16), 987);
+	t.is(fibonacci(17), 1597);
+	t.is(fibonacci(18), 2584);
+	t.is(fibonacci(19), 4181);
+	t.is(fibonacci(20), 6765);
 });

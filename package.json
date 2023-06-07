@@ -13,6 +13,7 @@
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "@webgpu/types": "^0.1.32",
+    "fp-ts": "^2.16.0",
     "parcel": "^2.8.3",
     "ts-node": "^10.9.1",
     "ts-node-dev": "2.0.0",
