@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
     "lib": [
-      "ES2022",
-      "DOM"
+      "ES2022"
     ],
     "module": "ES2022",
     "moduleResolution": "Node",
-    "strict": true,
-    "sourceMap": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "jsx": "react-jsx",
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2022",
     "typeRoots": [
       "./node_modules/@webgpu/types",
       "./node_modules/@types"

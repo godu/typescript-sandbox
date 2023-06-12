@@ -51,31 +51,18 @@ test('natural', t => {
 	t.deepEqual([...take(5)(natural)], [0, 1, 2, 3, 4]);
 });
 
-type Tree<T> = [T] | [Tree<T>, Tree<T>];
-
 /*
-Hylo :: Functor f => (f b -> b) -> (a -> f a) -> a -> b
+## Hylomorphism
+
+```haskell
+hylo :: Functor f => (f b -> b) -> (a -> f a) -> a -> b
 hylo f g = h where h = f . fmap h . g
+```
 */
 const hylo = <F extends URIS2>(F: Functor2<F>) =>
 	<A, B>(f: (fb: Kind2<F, A, B>) => B, g: (a: A) => Kind2<F, A, A>) =>
 		(a: A): B =>
 			pipe(a, g, fa => F.map(fa, hylo(F)(f, g)), f);
-
-// Const fibonacci = pipe<number, Tree<number>, number>(
-// 	fix<number, Tree<number>>(rec => n => (n === 0) ? [0] : ((n === 1) ? [1] : [rec(n - 2), rec(n - 1)])),
-// 	fix<Tree<number>, number>(rec => n => n.length === 1 ? n[0] : rec(n[0]) + rec(n[1])),
-// );
-
-// const fibonacci = hylo(Option.Functor)(
-
-// test('fibonacci', t => {
-// 	t.is(fibonacci(0), 0);
-// 	t.is(fibonacci(1), 1);
-// 	t.is(fibonacci(2), 1);
-// 	t.is(fibonacci(3), 2);
-// 	t.is(fibonacci(4), 3);
-// });
 
 const factorial = hylo(ListF.Functor2)<number, number>(
 	xs => {
