@@ -29,3 +29,21 @@ export const Functor2: Functor.Functor2<URI> = {
 	URI,
 	map: _map,
 };
+
+export const embed = <A>(fa: ListF<A, A[]>): A[] => {
+	if (fa === undefined) {
+		return [];
+	}
+
+	const [a, b] = fa;
+	return [a, ...b];
+};
+
+export const project = <A>(a: A[]): ListF<A[], A[]> => {
+	if (a.length === 0) {
+		return undefined;
+	}
+
+	const [head, ...tail] = a;
+	return [[head], tail];
+};

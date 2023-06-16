@@ -11,12 +11,16 @@ declare module 'fp-ts/lib/HKT' {
 	}
 }
 
-export type TreeF<A, B> = [A, B[]];
+export type TreeF<A, B> = [A, B[]] | undefined;
 
 export const URI = 'TreeF';
 export type URI = typeof URI;
 
 const _map = <E, A, B>(fa: TreeF<E, A>, f: (a: A) => B): TreeF<E, B> => {
+	if (fa === undefined) {
+		return undefined;
+	}
+
 	const [e, as] = fa;
 	return [e, as.map(a => f(a))];
 };

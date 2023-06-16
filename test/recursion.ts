@@ -1,7 +1,7 @@
 
 import test from 'ava';
 import {take} from '../src/iterable.js';
-import {fix, hylo} from '../src/monorecursion.js';
+import {ana, cata, fix, hylo} from '../src/monorecursion.js';
 import * as ListF from '../src/data/listf.js';
 import * as TreeF from '../src/data/treef.js';
 
@@ -89,6 +89,10 @@ test('factorial', t => {
 
 const fibonacci = hylo(TreeF.Functor2)<number, number>(
 	fa => {
+		if (fa === undefined) {
+			return 0;
+		}
+
 		const [a, as] = fa;
 		return as.reduce((acc, a) => acc + a, a);
 	},
@@ -127,4 +131,45 @@ test('fibonacci', t => {
 	t.is(fibonacci(18), 2584);
 	t.is(fibonacci(19), 4181);
 	t.is(fibonacci(20), 6765);
+});
+
+const length = cata(ListF.Functor2)<number[]>(ListF.project)<number>(
+	fb => {
+		if (fb === undefined) {
+			return 0;
+		}
+
+		const [_, b] = fb;
+		return b + 1;
+	},
+);
+
+test('length', t => {
+	t.is(length([]), 0);
+	t.is(length([0]), 1);
+	t.is(length([0, 1]), 2);
+	t.is(length([0, 1, 2]), 3);
+	t.is(length([0, 1, 2, 3]), 4);
+});
+
+const lines = ana(ListF.Functor2)<string, string[]>(ListF.embed)(
+	(n: string): ListF.ListF<string, string> => {
+		if (n === '') {
+			return undefined;
+		}
+
+		const i = n.indexOf('\n');
+		if (i === -1) {
+			return [n, ''];
+		}
+
+		return [n.slice(0, i), n.slice(i + 1)];
+	},
+);
+
+test('lines', t => {
+	t.deepEqual(lines(''), []);
+	t.deepEqual(lines('a'), ['a']);
+	t.deepEqual(lines('a\nb'), ['a', 'b']);
+	t.deepEqual(lines('a\nb\nc'), ['a', 'b', 'c']);
 });

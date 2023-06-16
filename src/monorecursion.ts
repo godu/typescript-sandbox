@@ -11,3 +11,9 @@ export const hylo = <F extends URIS2>(F: Functor2<F>) =>
 	<A, B>(f: (fb: Kind2<F, A, B>) => B, g: (a: A) => Kind2<F, A, A>) =>
 		(a: A): B =>
 			pipe(a, g, fa => F.map(fa, hylo(F)(f, g)), f);
+
+export const cata = <F extends URIS2>(F: Functor2<F>) => <A>(project: (a: A) => Kind2<F, A, A>) =>
+	<B>(f: (fb: Kind2<F, A, B>) => B) => hylo(F)(f, project);
+
+export const ana = <F extends URIS2>(F: Functor2<F>) =>
+	<A, B>(embed: (fb: Kind2<F, A, B>) => B) => (g: (a: A) => Kind2<F, A, A>) => hylo(F)(embed, g);
