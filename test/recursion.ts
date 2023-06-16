@@ -1,15 +1,9 @@
-/* eslint-disable unicorn/no-array-callback-reference */
-/* eslint-disable unicorn/no-array-method-this-argument */
-/* eslint-disable @typescript-eslint/no-redeclare */
+
 import test from 'ava';
-import {type Functor2} from 'fp-ts/lib/Functor.js';
-import {type Kind2, type URIS2} from 'fp-ts/lib/HKT';
-import {pipe} from 'fp-ts/lib/function.js';
 import {take} from '../src/iterable.js';
+import {fix, hylo} from '../src/monorecursion.js';
 import * as ListF from '../src/data/listf.js';
 import * as TreeF from '../src/data/treef.js';
-
-const fix = <A, B>(f: (rec: (a: A) => B) => (a: A) => B): (a: A) => B => f(a => fix(f)(a));
 
 const fac = fix((f: (n: number) => number) => (n: number) => n > 1 ? n * f(n - 1) : 1);
 
@@ -50,19 +44,6 @@ test('natural', t => {
 	t.deepEqual([...take(3)(natural)], [0, 1, 2]);
 	t.deepEqual([...take(5)(natural)], [0, 1, 2, 3, 4]);
 });
-
-/*
-## Hylomorphism
-
-```haskell
-hylo :: Functor f => (f b -> b) -> (a -> f a) -> a -> b
-hylo f g = h where h = f . fmap h . g
-```
-*/
-const hylo = <F extends URIS2>(F: Functor2<F>) =>
-	<A, B>(f: (fb: Kind2<F, A, B>) => B, g: (a: A) => Kind2<F, A, A>) =>
-		(a: A): B =>
-			pipe(a, g, fa => F.map(fa, hylo(F)(f, g)), f);
 
 const factorial = hylo(ListF.Functor2)<number, number>(
 	xs => {
