@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import type * as Functor from 'fp-ts/lib/Functor';
+import {type Kind2, type URIS2} from 'fp-ts/lib/HKT';
 
 declare module 'fp-ts/lib/HKT' {
 	interface URItoKind2<E, A> {
@@ -29,3 +30,20 @@ export const Functor2: Functor.Functor2<URI> = {
 	URI,
 	map: _map,
 };
+
+interface Recursive2<F extends URIS2, A> {
+	readonly URI: F;
+	readonly project: <E>(a: A) => Kind2<F, E, A>;
+}
+
+export const Recusive = <A extends unknown[]>(): Recursive2<URI, A> => ({
+	URI,
+	project<E>(as: A) {
+		if (as.length === 0) {
+			return undefined;
+		}
+
+		const [head, ...tail] = as;
+		return [head, tail];
+	},
+});
